@@ -4,6 +4,7 @@ const phraseId = document.getElementById("phrase");
 const start = document.querySelector(".start");
 const heading =document.getElementsByClassName("title")[0];
 const overlay = document.getElementById("overlay");
+let liItemsShow = document.getElementsByClassName("show");
 let missed = 0;
 const phrases =["caesar salad", "dark horse", "darkest hour", "fair play", "game is up"];
 
@@ -38,8 +39,8 @@ function getRandomPhraseArray(arr){
         // adding letter with class name letter 
             if(li.textContent !== " "){
                 li.classList.add("letter");     
-        }
-    } 
+            }
+        } 
     return arr;
 }
 
@@ -48,10 +49,10 @@ const phraseArray = getRandomPhraseArray(phrases);
 //using phrase array to call phrase to display which adds class letter
 const liClass = addPhraseToDisplay(phraseArray);
 
-//
+//checkletter function
 function checkLetter(button){
     //selecting all the elements with the classname letter
-    const liItems = document.querySelectorAll(".letter");
+   let liItems = document.querySelectorAll(".letter");
     let match = null;
     //checking for the li items with text content and matching that to phrase letters
     for(let i =0; i<liItems.length; i++){
@@ -67,68 +68,94 @@ function checkLetter(button){
 ///query keyboard listener
 qwerty.addEventListener("click", (e)=>{
     if(event.target.tagName==="BUTTON" && event.target.className !== "chosen"){
+        //disabling button and adding class chosen
         const button =event.target;
         button.classList.add("chosen");
         button.setAttribute("disabled", true);
-        const text = button.textContent;;
+        const text = button.textContent;
+        //calling checkletter function with text arg
         let check = checkLetter(text);
+        //comparing check with null 
         if(check === null){
+            //increasing missed counter
             missed+=1;
-            const img = document.getElementsByClassName("tries");
-           for(let i=0; i<img.length; i++){
-               const newImg= img[i].remove();
-               return newImg;
-           }
-             
-           }
-       }
+            //selecting all the img elements
+            let li = document.querySelectorAll("img");
+            if(li.length>0){
+                //removing child which is img 
+                li[0].parentNode.removeChild(li[0]);
+            }
+        }
+        //calling checkwin ()
        checkWin();
     }
-) 
-
-// function reset(){
-//     const butt = document.getElementsByTagName("a")[0];
-//    butt.textContent = "Restart"
-//    butt.addEventListener("click", ()=>{
-//     let lis = document.getElementById('phrase').getElementsByTagName('li');
-//     while (lis.length > 0) {
-//         lis[0].parentNode.removeChild(lis[0]);
-//     }
-//     const newPhrase = getRandomPhraseArray(phrases);
-//     addPhraseToDisplay(newPhrase);
-//     missed=0;
-//    let button = document.getElementsByClassName("chosen");
-//     console.log(button);
-//         button.className = "";
-      
-//         button.removeAttribute('disabled');
-
-//    })
-// }
+}) 
+   
 //checkwinFunction
-function checkWin(){
-    const liItemsLetter = document.querySelectorAll(".letter");
-    const liItemsShow = document.getElementsByClassName("show");
-    if(liItemsLetter.length === liItemsShow.length){
-        start.className = "win";
-        heading.textContent = "Player Won";
-        start.style.display ="flex";
-        for(let i =0; i<liItemsLetter.length; i++){
-            liItemsLetter[i].classList.remove("animated", "pulse");
-            }
+//sub fucntion status
+function status(state, text, disp){
+    let liItemsLetter = document.querySelectorAll(".letter");
+    start.className = state;
+    heading.textContent = text;
+    start.style.display =disp;
+    //adding class to the li ittems with class name letter
+    for(let i =0; i<liItemsLetter.length; i++){
+        liItemsLetter[i].className = "";
+    }  
+}
 
-       
+function checkWin(){
+    let liItemsLetter = document.querySelectorAll(".letter");
+    //comparing by length
+    if(liItemsLetter.length === liItemsShow.length){
+        //calling status function
+        status("win", "Player Won", "flex");
     }
     else if(missed > 4){
-        start.className = "lose";
-        heading.textContent = "Player lose";
-        start.style.display ="flex";
-        for(let i =0; i<liItemsLetter.length; i++){
-        liItemsLetter[i].classList.remove("animated", "pulse");
-        }
-        reset();
-       
+       //calling status function 
+        status("lose", "Player lose", "flex");
     }
- 
+    //calling reset function
+    reset();  
+}
 
+//resetting the game
+function reset(){
+    //selection anchor tag 
+    const button = document.getElementsByTagName("a")[0];
+    button.textContent = "Restart"
+    //rermoving old phrase
+    button.addEventListener("click", (e)=>{
+        let li =  document.getElementById('phrase').getElementsByTagName('li');
+        for(let i=0; li.length>i;){
+            li[0].parentNode.removeChild(li[0]);
+        }
+       //adding new phrase to the screen by calling the random and disp function
+        const newPhrase = getRandomPhraseArray(phrases);
+        addPhraseToDisplay(newPhrase);
+        missed=0;
+
+       //resetting keyboard key
+       let buttonChosen = document.getElementsByClassName("chosen");
+       let buttonAll = document.getElementsByTagName("button");
+       //setting chosen key to nothing
+        buttonChosen.className = ""; 
+        for(var i=0; i<buttonAll.length; i++){
+            //selecting all the buttons 
+            buttonAll[i].className = ""; 
+            buttonAll[i].removeAttribute('disabled');
+        }
+        //showing hearts   
+        //*** need help **
+            const tries = document.getElementsByTagName("li");  
+            const img = document.createElement("img");
+            img.setAttribute("src", "images/liveHeart.png");
+            img.setAttribute("height", "35px");
+            img.setAttribute("width", "30px");
+            console.log(img);  
+            for(var i=0; i<tries.length-1; i++){
+                tries[i].appendChild(img);
+        }         
+
+   })
 }
