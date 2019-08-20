@@ -8,12 +8,16 @@ let liItemsShow = document.getElementsByClassName("show");
 let missed = 0;
 const phrases =["caesar salad", "dark horse", "darkest hour", "fair play", "game is up"];
 
-
 //hide the strat screen display;
 overlay.addEventListener("click", (e)=>{
     if(event.target.tagName === "A")
     start.style.display = "none";
 });
+
+//remove child function
+function removeChild(list){
+   list.parentNode.removeChild(list);
+}
 
 // generate single letter from the phrases randomly
 function getRandomPhraseArray(arr){
@@ -43,7 +47,6 @@ function getRandomPhraseArray(arr){
         } 
     return arr;
 }
-
 //saving random phrase in phrase array
 const phraseArray = getRandomPhraseArray(phrases);
 //using phrase array to call phrase to display which adds class letter
@@ -83,7 +86,8 @@ qwerty.addEventListener("click", (e)=>{
             let li = document.querySelectorAll("img");
             if(li.length>0){
                 //removing child which is img 
-                li[0].parentNode.removeChild(li[0]);
+                 //calling removeChild function
+                removeChild(li[0]);
             }
         }
         //calling checkwin ()
@@ -103,7 +107,7 @@ function status(state, text, disp){
         liItemsLetter[i].className = "";
     }  
 }
-
+//main function
 function checkWin(){
     let liItemsLetter = document.querySelectorAll(".letter");
     //comparing by length
@@ -128,7 +132,8 @@ function reset(){
     button.addEventListener("click", (e)=>{
         let li =  document.getElementById('phrase').getElementsByTagName('li');
         for(let i=0; li.length>i;){
-            li[0].parentNode.removeChild(li[0]);
+            //calling removeChild function
+            removeChild(li[0]);
         }
        //adding new phrase to the screen by calling the random and disp function
         const newPhrase = getRandomPhraseArray(phrases);
@@ -158,7 +163,8 @@ function reset(){
         } 
         if(images.length>4){
             for(var i=0; i<images.length-5; i++)
-                images[i].parentNode.removeChild(images[i]);
-            }         
+            //calling removeChild function
+            removeChild(images[i]);
+        }         
    })
 }
