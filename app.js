@@ -113,7 +113,7 @@ function checkWin(){
     }
     else if(missed > 4){
        //calling status function 
-        status("lose", "Player lose", "flex");
+        status("lose", "Game Over", "flex");
     }
     //calling reset function
     reset();  
@@ -146,16 +146,19 @@ function reset(){
             buttonAll[i].removeAttribute('disabled');
         }
         //showing hearts   
-        //*** need help **
-            const tries = document.getElementsByTagName("li");  
-            const img = document.createElement("img");
-            img.setAttribute("src", "images/liveHeart.png");
-            img.setAttribute("height", "35px");
-            img.setAttribute("width", "30px");
-            console.log(img);  
-            for(var i=0; i<tries.length-1; i++){
-                tries[i].appendChild(img);
-        }         
-
+        const tries = document.getElementsByClassName("tries");  
+        //creating img element
+        const img = document.createElement("img");
+        const images = document.getElementsByTagName("img");
+        img.setAttribute("src", "images/liveHeart.png");
+        img.setAttribute("height", "35px");
+        img.setAttribute("width", "30px");
+        for(var i=0; i<tries.length; i++){
+            tries[i].appendChild(img);
+        } 
+        if(images.length>4){
+            for(var i=0; i<images.length-5; i++)
+                images[i].parentNode.removeChild(images[i]);
+            }         
    })
 }
